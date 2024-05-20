@@ -18,13 +18,13 @@ class BlogController extends Controller
         
          return view('dashboard', compact('blogs'));
      }
-     public function creat()
+     public function create()
      {
          $blogs=Blog::with('user')
          ->withCount('likes','dislikes')
          ->get() ;   //Blog= blogs (pluralcase)
         
-         return view('blog.creat', compact('blogs'));
+         return view('blog.create', compact('blogs'));
      }
      //Validating and saving data to db
      public function store(Request $request)

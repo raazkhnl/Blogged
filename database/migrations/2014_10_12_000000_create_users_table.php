@@ -19,6 +19,16 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // $table->foreignIdFor(Role::class);
+            // $table->foreignId('role_id');
+            $table->unsignedBigInteger('role_id')->nullable();
+            $table->enum('status',['active', 'inactive'])->default('active');
+            $table->string('display_order')->nullable();
+            $table->string('remarks')->nullable();
+            $table->enum('created_by', ['admin','agent','self'])->default('self');
+
+
             $table->rememberToken();
             $table->timestamps();
         });

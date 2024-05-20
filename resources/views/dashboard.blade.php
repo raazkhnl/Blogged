@@ -88,7 +88,7 @@
 
                             </div>
 
-                            <p class="card-text">{{ $blog->description }}dcdcdsccd</p>
+                            <p class="card-text">{{ $blog->description }}</p>
 
 
                             @auth
@@ -132,7 +132,7 @@
             <div class="card">
                 <h2><b>About</b></h2>
                 <div><img src="storage\Images\RaaZ.jpg" class="img-fluid" style="width:150px height:200px; " alt="">
-                    <img src="../storage/Images/BloggedLogo.png" width="380" height="380" alt="logo">
+                    <img src="../storage/Images/BloggedLogo.png" width="280"  alt="logo">
 
                 </div>
                 <p class="text-success" style="text-align: justify">&nbsp;&nbsp;&nbsp; This is a simple <b>MVC</b>
@@ -142,7 +142,7 @@
                 </p>
             </div>
             <div class="card">
-                <h3><b>Popular Post</b></h3>
+                <h3><b>Popular Posts</b></h3>
                 <div class="fakeimg">Image</div><br>
                 <div class="fakeimg">Image</div><br>
                 <div class="fakeimg">Image</div>

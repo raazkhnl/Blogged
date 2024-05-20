@@ -1,6 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{
+    AdminController,
+    AgentController,
+    RoleController,
+    UserController,
+    PermissionController,
+    BlogController,
+    CommentController,
+    ReactorController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -13,49 +23,75 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Home route
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('dashboard', function(){
-//     return view('dashboard');
-// })
-// ->middleware(['auth'])->name('dashboard');
+// Dashboard route
+Route::get('dashboard', [BlogController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-Route::get('user/{id}/profile', 'App\Http\Controllers\UserController@profile')
-->middleware(['auth'])->name('user.profile');
+// Blog routes
+Route::prefix('blog')->middleware('auth')->group(function () {
+    Route::get('create', function () {
+        return view('blog.create');
+    })->name('blog.create');
+    
+    Route::post('save', [BlogController::class, 'store'])->name('blog.save');
+    Route::get('{blog}/edit', [BlogController::class, 'edit'])->name('blog.edit');
+    Route::put('{blog}/update', [BlogController::class, 'update'])->name('blog.update');
+    Route::delete('{blog}', [BlogController::class, 'delete'])->name('blog.delete');
+    Route::get('{id}/comment', [BlogController::class, 'comment'])->name('blog.comment');
+    Route::get('service', function () {
+        return view('blog.service');
+    })->name('blog.service');
+});
 
-Route::get('dashboard', 'App\Http\Controllers\BlogController@index')->name('dashboard');
-// Route::get('blog', 'App\Http\Controllers\BlogController@index')->name('blog.index');
+// Comment route
+Route::post('comment/save', [CommentController::class, 'store'])->name('comment.save')->middleware('auth');
 
+// User profile route
+Route::get('user/{id}/profile', [UserController::class, 'profile'])->middleware(['auth'])->name('user.profile');
 
-Route::get('blog/creat', function () {
-    return view('blog.creat');
-})
-    ->name('blog.creat')
-    ->middleware('auth');
+// Participant related route
+Route::post('respond/{blog}', [ReactorController::class, 'respond'])->name('blog.respond');
 
-Route::post('blog/save', 'App\Http\Controllers\BlogController@store')
-    ->name('blog.save')
-    ->middleware('auth');
+// Authenticated routes
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/test', function() {
+        return "Hello";
+    })->name('profile.test');
 
-//Route Promote//Route Model Binding
-Route::get('blog/{blog}/edit', 'App\Http\Controllers\BlogController@edit')->name('blog.edit');
+    // Admin routes
+    Route::middleware('role:1')->group(function () {
+        Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
+    });
 
-Route::get('blog/{id}/comment', 'App\Http\Controllers\BlogController@comment')->name('blog.comment')->middleware('auth');
-Route::post('comment/save', 'App\Http\Controllers\CommentController@store')
-    ->name('comment.save')
-    ->middleware('auth');
+    // Agent routes
+    Route::middleware('role:2')->group(function () {
+        Route::get('/agent/dashboard', [AgentController::class, 'AgentDashboard'])->name('agent.dashboard');
+    });
+});
 
-Route::put('blog/{blog}/update', 'App\Http\Controllers\BlogController@update')->name('blog.update');
-Route::delete('blog/{blog}', 'App\Http\Controllers\BlogController@delete')->name('blog.delete');
+// Roles and Permissions routes
+Route::controller(RoleController::class)->group(function () {
+    Route::get('/{user_id}/permission', 'AllPermission')->name('all.permission');
+    Route::post('/add/{role_id}/{permission_id}', 'AddPermission')->name('add.permission');
+    Route::get('/add/{role_id}/{permission_id}', 'AddPermission')->name('role.added');
+});
 
+// Role assignments
+Route::post('/users/{userId}/assign-role', [RoleController::class, 'assignRole']);
+Route::get('/users/{userId}/roles', [UserController::class, 'showUserRoles']);
 
-// Participant related routes
-Route::post('respond/{blog}', 'App\Http\Controllers\ReactorController@respond')->name('blog.respond');
+// Permission assignments
+Route::post('/roles/{roleId}/assign-permission', [PermissionController::class, 'assignPermission']);
+Route::get('/roles/{roleId}/permissions', [PermissionController::class, 'getRolePermissions']);
 
-Route::get('blog/service', function(){
-    return view('blog.service');
-})->name('blog.service');
-
+// Authentication routes
 require __DIR__ . '/auth.php';

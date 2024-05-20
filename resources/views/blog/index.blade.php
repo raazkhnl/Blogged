@@ -17,14 +17,14 @@
         @foreach($blogs as $blog)
                 {{-- Blog List --}}
           <div class="card">
-              <h1><b>{{$blog->user->name}}</b> created a blog.</h2>
-                  <h5><b>at</b> <span id="datetime">{{$blog->created_at}}</span></h5>
-              <h1 class="card-title"><b>{{$blog->title}}</b></h5>
                 <div class="col-md-6">
-                    <a href="#" style=""><img src="{{ asset('storage/'. $blog->image) }}" class="img-fluid" style="width:350px height:300px; " alt="..."> </a>
+                    <a href="#" style=""><img src="{{ asset('storage/'. $blog->image) }}" class="img-fluid" style="width:350px; " alt="..."> </a>
                 </div>
-                        <p class="card-text">{{$blog->description}}</p>
+                <h1 class="card-title"><b>{{$blog->title}}</b></h5>
 
+                        <p class="card-text">{{$blog->description}}</p>
+                        <h1>Created by:<b>{{$blog->user->name}}</b></h2>
+                  <h5><b>Posted at:</b> <span id="datetime">{{$blog->created_at}}</span></h5>
                         
                 @auth
                 <span>
@@ -61,11 +61,11 @@
             <div class="rightcolumn">
         <div class="card">
           <h2><b>About</b></h2>
-          <div><img src="storage\Images\RaaZ.jpg" class="img-fluid" style="width:150px height:200px; " alt=""></div>
+          <div><img src="storage\Images\RaaZ.jpg" class="img-fluid" style="width:150px; height: 200px;" alt=""></div>
           <p class="text-success" style="text-align: justify">&nbsp;&nbsp;&nbsp; This is a simple <b>MVC</b> blogging website developed by myself after the great 5 days training from <b>ACCESS</b>. It can be a platform to the people to shate their ideas, projects, thoughts and manymore things. They can also keep themself updated looking through the blogs of other and know what is going around the world.</p>
         </div>
         <div class="card">
-            <h3><b>Popular Post</b></h3>
+            <h3><b>Popular </b></h3>
             <div class="fakeimg">Image</div><br>
             <div class="fakeimg">Image</div><br>
             <div class="fakeimg">Image</div>
